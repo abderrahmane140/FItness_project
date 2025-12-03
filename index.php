@@ -1,76 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
+<?php include 'inc/header.php'?>
+<?php
+    $sql_courses = 'SELECT * FROM courses';    
+    $result_courses = mysqli_query($conn, $sql_courses);        
+    $courses = mysqli_fetch_all($result_courses, MYSQLI_ASSOC);
+    
+    $sql_equipments = 'SELECT * FROM equipments';    
+    $result_equipments = mysqli_query($conn, $sql_equipments);    
+    $equipments = mysqli_fetch_all($result_equipments, MYSQLI_ASSOC);
+?>
 
-    <title>Fitness</title>
-</head>
-<body>
-<div class="min-h-full">
-  <nav class="bg-black ">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="flex h-16 items-center justify-between">
-        <div class="flex items-center">
-          <div class="shrink-0">
-            <h1 class="font-bold text-xl text-white">Fitness</h1>
+<!-- Main Container -->
+<div class="min-h-screen p-8">
+  <div class="max-w-7xl mx-auto">
+    
+    <!-- Header Section -->
+    <div class="mb-12">
+      <h1 class="text-4xl font-bold  mb-2">Dashboard</h1>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+      <!-- Courses Card -->
+      <div class="group bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-blue-100 text-sm font-medium mb-2">Total Courses</p>
+            <p class="text-5xl font-bold text-white"><?php echo count($courses); ?></p>
           </div>
-          <div class="hidden md:block">
-            <div class="ml-10 flex items-baseline space-x-4">
-              <a href="#" aria-current="page" class="rounded-md bg-gray-950/50 px-3 py-2 text-sm font-medium text-white">Dashboard</a>
-              <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Courses</a>
-              <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Equipments</a>
+          <div class="bg-blue-500 bg-opacity-30 p-4 rounded-lg">
+                <i class="fas fa-running text-white text-xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Equipment Card -->
+      <div class="group bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-lg p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-emerald-100 text-sm font-medium mb-2">Total Equipment</p>
+            <p class="text-5xl font-bold text-white"><?php echo count($equipments); ?></p>
+          </div>
+          <div class="bg-emerald-500 bg-opacity-30 p-4 rounded-lg">
+            <i class="fas fa-basketball-ball text-white text-xl"></i>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- Courses Section -->
+      <div class="bg-neutral-100 rounded-lg shadow-lg overflow-hidden">
+        <div class="px-6 py-4">
+          <h2 class="text-xl font-bold">Available Courses</h2>
+        </div>
+        <div class="divide-y divide-slate-700 max-h-96 overflow-y-auto">
+          <?php foreach($courses as $course) { ?>
+            <div class="p-6 hover:bg-neutral-200 transition-colors duration-200">
+              <h3 class="text-lg font-semibold  mb-2"><?php echo htmlspecialchars($course['title']); ?></h3>
+              <div class="flex items-center  text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span><?php echo htmlspecialchars($course['duration']); ?></span>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="-mr-2 flex md:hidden">
-          <!-- Mobile menu button -->
-          <button type="button" command="--toggle" commandfor="mobile-menu" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
-            <span class="absolute -inset-0.5"></span>
-            <span class="sr-only">Open main menu</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 in-aria-expanded:hidden">
-              <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 not-in-aria-expanded:hidden">
-              <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </button>
+          <?php } ?>
         </div>
       </div>
-    </div>
 
-    <el-disclosure id="mobile-menu" hidden class="block md:hidden">
-      <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-              <a href="#" aria-current="page" class="rounded-md bg-gray-950/50 px-3 py-2 text-sm font-medium text-white">Dashboard</a>
-              <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Courses</a>
-              <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Equipments</a>
-      </div>
-      <div class="border-t border-white/10 pt-4 pb-3">
-        <div class="flex items-center px-5">
-
-          <button type="button" class="relative ml-auto shrink-0 rounded-full p-1 text-gray-400 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
-            <span class="absolute -inset-1.5"></span>
-            <span class="sr-only">View notifications</span>
-          </button>
+      <!-- Equipment Section -->
+      <div class="bg-neutral-100 rounded-lg shadow-lg overflow-hidden">
+        <div class="text-black px-6 py-4">
+          <h2 class="text-xl font-bold">Available Equipment</h2>
         </div>
-        <div class="mt-3 space-y-1 px-2">
-          <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">Sign out</a>
+        <div class="divide-y divide-slate-700 max-h-96 overflow-y-auto">
+          <?php foreach($equipments as $equipment) { ?>
+            <div class="p-6 hover:bg-neutral-200 transition-colors duration-200">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold"><?php echo htmlspecialchars($equipment['name']); ?></h3>
+                <span class="bg-emerald-500 bg-opacity-20 text-emerald-500 px-3 py-1 rounded-full text-sm font-medium">
+                  <?php echo htmlspecialchars($equipment['quantity']); ?> in stock
+                </span>
+              </div>
+            </div>
+          <?php } ?>
         </div>
       </div>
-    </el-disclosure>
-  </nav>
 
-  <header class="relative after:pointer-events-none after:absolute after:inset-x-0 after:inset-y-0 after:border-y after:border-white/10">
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <h1 class="text-3xl font-bold tracking-tight">Dashboard</h1>
     </div>
-  </header>
-  <main>
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <!-- Your content -->
-    </div>
-  </main>
+
+  </div>
 </div>
-</body>
-</html>
+
+<?php include 'inc/footer.php'?>
