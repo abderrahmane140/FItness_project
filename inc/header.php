@@ -21,9 +21,9 @@
           </div>
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
-              <a href="#" aria-current="page" class="rounded-md bg-gray-950/50 px-3 py-2 text-sm font-medium text-white">Dashboard</a>
-              <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Courses</a>
-              <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Equipments</a>
+              <a href="index.php" aria-current="page" class="rounded-md bg-gray-950/50 px-3 py-2 text-sm font-medium text-white">Dashboard</a>
+              <a href="/Courses.php" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Courses</a>
+              <a href="/equipments.php" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Equipments</a>
             </div>
           </div>
         </div>
@@ -51,9 +51,9 @@
 
     <el-disclosure id="mobile-menu" hidden class="block md:hidden">
       <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-              <a href="#" aria-current="page" class="rounded-md bg-gray-950/50 px-3 py-2 text-sm font-medium text-white">Dashboard</a>
-              <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Courses</a>
-              <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Equipments</a>
+              <a href="index.php" aria-current="page" class="rounded-md bg-gray-950/50 px-3 py-2 text-sm font-medium text-white">Dashboard</a>
+              <a href="/Courses.php" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Courses</a>
+              <a href="/equipments.php" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Equipments</a>
       </div>
       <div class="border-t border-white/10 pt-4 pb-3">
         <div class="flex items-center px-5">
