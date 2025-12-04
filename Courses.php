@@ -1,6 +1,6 @@
 <?php
 
-use LDAP\Result;
+
 
     include 'inc/header.php';
     $sql_query = 'SELECT * FROM courses';
