@@ -23,6 +23,7 @@ if(!isset($_SESSION['user'])){
         $start_hour = mysqli_real_escape_string($conn, $_POST['start_hour'] ?? '');
         $duration = mysqli_real_escape_string($conn, $_POST['duration'] ?? '');
         $max_participants = intval($_POST['max_participants'] ?? 0);
+        $selctedequipments = $_POST['equipments'] ?? [];
 
 
         if($title && $category && $date && $start_hour && $duration && $max_participants){
@@ -35,13 +36,32 @@ if(!isset($_SESSION['user'])){
                         duration='$duration', 
                         max_participants=$max_participants
                         WHERE id=$id";
+                        mysqli_query($conn, $sql);
+
+                        //remove the old equipmenst
+                        mysqli_query($conn, "DELETE FROM course_equipments WHERE course_id = $id");
+
+
+                        foreach($selctedequipments as $eqID){
+                          $eqId = intval($eqId);
+                          mysqli_query($conn, "INSERT INTO course_equipments (course_id, equipment_id) VALUES ($id , $eqID)");
+                        }
             }else {
                 $sql = "INSERT INTO courses (title, category, date, start_hour, duration, max_participants) 
                 VALUES ('$title', '$category', '$date', '$start_hour', '$duration', $max_participants)";
+                mysqli_query($conn, $sql);
+
+                //get the last id insrted 
+
+                $newId = mysqli_insert_id($conn);
+                foreach($selctedequipments as $eqID){
+                  $eqID = intval($eqID);
+                  mysqli_query($conn, "INSERT INTO course_equipments (course_id, equipment_id) VALUES ($newId , $eqID)");
+                }
             }
 
 
-            mysqli_query($conn, $sql);
+            
             header("location: " .$_SERVER['PHP_SELF']);
             exit;
         }
@@ -58,6 +78,12 @@ if(!isset($_SESSION['user'])){
         exit;
     }
     
+
+    //fetch all the equipments 
+
+    $sql_equipments  = "SELECT * FROM equipments";
+    $result = mysqli_query($conn, $sql_equipments);
+    $equipments = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 ?>
 
@@ -79,6 +105,36 @@ if(!isset($_SESSION['user'])){
             <input class="w-full rounded border px-3 py-2" placeholder="Start hour" type="text" name="start_hour" id="start_hour" required />
             <input class="w-full rounded border px-3 py-2" placeholder="Duration" type="text" name="duration" id="duration" required />
             <input class="w-full rounded border px-3 py-2" placeholder="Max participants" type="number" name="max_participants" id="max_participants" required />
+            
+
+            <!-- equipments section -->
+            <div class="relative w-full" x-data="{ open: false }">
+                <!-- Dropdown button -->
+                <button 
+                    type="button" 
+                    class="w-full bg-white border rounded px-3 py-2 text-left flex justify-between items-center"
+                    onclick="document.getElementById('equipment-dropdown').classList.toggle('hidden')"
+                >
+                    Select Equipments
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+
+                <!-- Dropdown menu -->
+                <div 
+                    id="equipment-dropdown"
+                    class="hidden absolute mt-1 w-full bg-white border rounded shadow-lg max-h-60 overflow-auto z-50"
+                >
+                    <?php foreach($equipments as $equ) { ?>
+                        <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer">
+                            <input type="checkbox" name="equipments[]" value="<?php echo $equ['id'] ?>" class="mr-2">
+                            <?php echo $equ['name'] ?>
+                        </label>
+                    <?php } ?>
+                </div>
+            </div>
+
 
             <button type="submit" class="w-full bg-sky-600 text-white rounded px-3 py-2" id="submit-btn">Save</button>
         </form>
