@@ -1,6 +1,13 @@
-<?php include 'inc/header.php'?>
+
 
 <?php
+require __DIR__ . '/inc/header.php';
+
+session_start();
+if(!isset($_SESSION['user'])){
+  header('Location: pages/login.php');
+  exit();
+}
 
 function e($v) {
     return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8');
@@ -25,7 +32,7 @@ $equipments = mysqli_fetch_all($result_equipments, MYSQLI_ASSOC);
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
       <div>
         <h1 class="text-3xl font-extrabold text-neutral-900 leading-tight">Dashboard</h1>
-        <p class="text-sm text-neutral-500 mt-1">Welcome back — here's a quick snapshot of your gym data.</p>
+        <p class="text-sm text-neutral-500 mt-1">Welcome back <strong><?php echo $_SESSION['user']; ?></strong>— here's a quick snapshot of your gym data.</p>
       </div>
 
       <div class="flex items-center gap-3">
@@ -171,4 +178,4 @@ $equipments = mysqli_fetch_all($result_equipments, MYSQLI_ASSOC);
   </div>
 </div>
 
-<?php include 'inc/footer.php'?>
+<?php require __DIR__ . '/inc/footer.php';?>

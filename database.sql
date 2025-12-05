@@ -59,7 +59,7 @@ INSERT INTO users (username, email, password, role_id) VALUES
 ('ahmed', 'ahmed@example.com', 'password123', 1),  -- admin
 ('hassan', 'hassan@example.com', 'password123', 2),      -- user
 ('aymen', 'aymen@example.com', 'password123', 2); -- user
-
+--bsarabderrahmane01@gmail.com  password123
 
 --courses table
 INSERT INTO courses (title, category, date, start_hour, duration, max_participants) VALUES
