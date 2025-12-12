@@ -1,14 +1,15 @@
 <?php
-
-require __DIR__ . '/../inc/header.php';
-
-
-
+ob_start();
 session_start();
+
+
 if(!isset($_SESSION['user'])){
     header("Location: ../pages/login.php");
     exit();
 }
+
+
+require __DIR__ . '/../inc/header.php';
 
 $sql_query = 'SELECT * FROM equipments';
 $equipments = mysqli_query($conn, $sql_query);
@@ -22,6 +23,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $quantity = intval($_POST['quantity'] ?? 0);
     $state = mysqli_real_escape_string($conn,$_POST['state'] ?? 'bon');
     $id = intval($_POST['id'] ?? 0);
+    $selectedCourses = $_POST['courses'] ?? [];
 
 
 
@@ -33,15 +35,34 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             quantity = $quantity,
             state = '$state'
             WHERE id = $id";
+            mysqli_query($conn, $sql);
+
+            //clear the courses_equipments before updating
+            if(count($selectedCourses) > 0 ){
+                mysqli_query($conn, "DELETE FROM course_equipments WHERE id = $id");
+
+                foreach($selectedCourses as $courId){
+                $courId = intval($courId);
+                mysqli_query($conn, "INSERT INTO course_equipments (course_id, equipment_id) VALUES ('$courId', '$id')");
+            }
+
+            }
         }else{
             $sql = "INSERT INTO equipments (name, type, quantity , state) 
             VALUES ('$name', '$type', '$quantity','$state')";
+            mysqli_query($conn, $sql);
+
+            $newId = mysqli_insert_id($conn);
+            foreach($selectedCourses as $courId){
+                $courId = intval($courId);
+                mysqli_query($conn, "INSERT INTO course_equipments (course_id, equipment_id) VALUES ('$courId', '$newId')");
+            }
             
         }
 
 
 
-        mysqli_query($conn, $sql);
+        
         header("location: " . $_SERVER['PHP_SELF']);
         exit();
     }
@@ -51,15 +72,25 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])){
         $id = $_POST['delete_id'];
+
+        mysqli_query($conn, "DELETE FROM course_equipments WHERE  equipment_id = $id");
         $sql = "DELETE FROM equipments WHERE id = $id";
         mysqli_query($conn, $sql);
         header("location: " . $_SERVER['PHP_SELF']);
         exit();
     }
 
-
-
+    
+    
+    
 }
+//get all the course
+
+$sql = "SELECT * FROM courses";
+$res = mysqli_query($conn,$sql);
+$courses = mysqli_fetch_all($res, MYSQLI_ASSOC);
+
+// var_dump($courses);
 
 ?>
 
@@ -75,11 +106,41 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
             <input class="w-full rounded border px-3 py-2" placeholder="name" name="name" id="name" type="text" required />
             <input class="w-full rounded border px-3 py-2" placeholder="Type" name="type" id="type" type="text" required />
-            <input class="w-full rounded border px-3 py-2" placeholder="Quantity" type="number" name="quantity" id="quantity" required />            <select class="w-full rounded border px-3 py-2" name="state" id="state">
-            <option value="bon">Bon</option>
-            <option value="moyen">moyen</option>
-            <option value="remplace">remplace</option>
+            <input class="w-full rounded border px-3 py-2" placeholder="Quantity" type="number" name="quantity" id="quantity" required />
+            <select class="w-full rounded border px-3 py-2" name="state" id="state">
+                <option value="bon">Bon</option>
+                <option value="moyen">moyen</option>
+                <option value="remplace">remplace</option>
             </select>
+
+            <div class="relative w-full">
+
+                <button
+                type="button"
+                class="w-full bg-white border rounded px-3 py-2 text-left flex justify-between items-center"
+                onclick="document.getElementById('courses-dropdown').classList.toggle('hidden')"
+                >
+                Select Courses
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+                </button>
+
+                <div id="courses-dropdown"
+                class="hidden absolute mt-1 w-full bg-white border rounded shadow-lg max-h-60 overflow-auto z-50"
+                >
+                <?php foreach($courses as $cour ) {?>
+                    <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer">
+                        <input type="checkbox" name="courses[]" value="<?= $cour['id'] ?>?>" class="mr-2">
+                        <?=  $cour['title']; ?>
+                    </label>
+                <?php }?>
+
+                </div>
+
+            </div>
+
+
             <button type="submit" class="w-full bg-sky-600 text-white rounded px-3 py-2" id="submit-btn">Save</button>
         </form>
     </div>

@@ -1,13 +1,12 @@
-
-
 <?php
-require __DIR__ . '/inc/header.php';
-
 session_start();
+
+
 if(!isset($_SESSION['user'])){
   header('Location: pages/login.php');
   exit();
 }
+require __DIR__ . '/inc/header.php';
 
 function e($v) {
     return htmlspecialchars($v ?? '', ENT_QUOTES, 'UTF-8');
@@ -35,25 +34,6 @@ $equipments = mysqli_fetch_all($result_equipments, MYSQLI_ASSOC);
         <p class="text-sm text-neutral-500 mt-1">Welcome back <strong><?php echo $_SESSION['user']; ?></strong>— here's a quick snapshot of your gym data.</p>
       </div>
 
-      <div class="flex items-center gap-3">
-        <div class="relative">
-          <input type="text" id="search" placeholder="Search courses or equipment..." class="w-64 pl-10 pr-3 py-2 rounded-lg border border-neutral-200 bg-white text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-sky-300" />
-          <svg class="w-4 h-4 text-neutral-400 absolute left-3 top-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"></path>
-          </svg>
-        </div>
-
-        <input type="date" class="px-3 py-2 rounded-lg border border-neutral-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-300" />
-
-        <button class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-neutral-200 rounded-lg shadow-sm hover:shadow-md text-sm text-neutral-700">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-          Add
-        </button>
-
-        <div class="flex items-center gap-3">
-          <img src="https://ui-avatars.com/api/?name=JD&background=2dd4bf&color=fff&rounded=true" alt="avatar" class="w-9 h-9 rounded-full shadow-sm" />
-        </div>
-      </div>
     </div>
 
     <!-- Stats -->

@@ -1,12 +1,13 @@
 <?php
-require __DIR__ . '/../inc/header.php';
-
-
+ob_start();
 session_start();
+
+
 if(!isset($_SESSION['user'])){
   header("Location: ../pages/login.php");
   exit();
 }
+require __DIR__ . '/../inc/header.php';
 
 
 
@@ -72,6 +73,8 @@ if(!isset($_SESSION['user'])){
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])){
         $delete_id = intval($_POST['delete_id']);
+        
+        mysqli_query($conn, "DELETE FROM course_equipments WHERE course_id = $delete_id");
         $sql_delete = "DELETE FROM courses WHERE id = $delete_id ";
         mysqli_query($conn, $sql_delete);
         header('Location: '. $_SERVER['PHP_SELF']);
@@ -151,7 +154,6 @@ if(!isset($_SESSION['user'])){
 
     <div class="flex items-center gap-3">
       <!-- lightweight search (optional visually only) -->
-      <input type="text" placeholder="Search..." class="hidden md:inline-block w-56 px-3 py-2 rounded-lg border border-neutral-200 bg-white text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-sky-200" />
 
       <button id="btnOpen" class="inline-flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white rounded-md px-4 py-2 text-sm font-medium shadow-sm">
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
