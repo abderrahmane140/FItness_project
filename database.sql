@@ -82,3 +82,12 @@ INSERT INTO course_equipments (course_id, equipment_id) VALUES
 (2, 2),  
 (3, 1),  
 (3, 3);  
+
+
+
+
+INSERT INTO roles (name) VALUES ('user'), ('admin');
+
+
+ALTER TABLE users
+MODIFY role_id INT NOT NULL DEFAULT 1;
